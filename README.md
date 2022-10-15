@@ -33,7 +33,6 @@
 |-|-|-|
 |Laravel|http://localhost:8000/|-|
 |MailHog|http://localhost:8025/|-|
-|phpPgAdmin|http://localhost:8432/| `postgres` / *（入力不要）*|
 
 ## .env によるカスタマイズ（任意）
 
@@ -42,7 +41,6 @@
 |APP_DEBUG|Laravel設定|true|
 |PORT_WEB_APP|公開ポート / Laravel|8000|
 |PORT_PGSQL|公開ポート / PostgreSQL|0 *非公開*|
-|PORT_WEB_PHPPGADMIN|公開ポート / phpPgAdmin|8432|
 |PORT_WEB_MAIL|公開ポート / MailHog|8025|
 |PORT_BROWSERSYNC|公開ポート / Browsersync|3000|
 
