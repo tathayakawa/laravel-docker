@@ -5,6 +5,7 @@ RUN apt-get update \
  && curl -fsSL https://salsa.debian.org/postgresql/postgresql-common/raw/master/pgdg/apt.postgresql.org.sh | PGVERSION=15 bash - \
  && apt-get install -y --no-install-recommends \
     bash-completion \
+    default-mysql-client \
     git \
     jq \
     libbz2-dev \
@@ -43,6 +44,7 @@ RUN apt-get update \
     intl \
     opcache \
     pcntl \
+    pdo_mysql \
     pdo_pgsql \
     pgsql \
     sockets \
