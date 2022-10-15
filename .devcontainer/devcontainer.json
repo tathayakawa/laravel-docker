@@ -1,5 +1,5 @@
 {
-    "name": "laravel-amazonlinux-postgresql",
+    "name": "laravel-docker",
 
     "dockerComposeFile": [
         "../docker-compose.yml"
