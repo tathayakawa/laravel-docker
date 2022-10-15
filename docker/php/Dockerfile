@@ -1,54 +1,86 @@
-FROM amazonlinux:2
+FROM php:8.1-apache-bullseye
 
-ENV TZ Asia/Tokyo
-
-RUN \
-    amazon-linux-extras install epel -y && \
-    yum install -y \
-        yum-utils \
-        https://rpm.nodesource.com/pub_16.x/el/7/x86_64/nodesource-release-el7-1.noarch.rpm \
-        https://rpms.remirepo.net/enterprise/remi-release-7.rpm \
-    && \
-    yum-config-manager --enable remi-php81 && \
-    yum-config-manager --setopt="remi-php81.priority=5" --save && \
-    yum-config-manager --enable remi && \
-    yum-config-manager --setopt="remi.priority=5" --save && \
-    yum install -y \
-        composer \
-        git \
-        httpd \
-        jq \
-        nmap-ncat \
-        nodejs \
-        php \
-        php-bcmath \
-        php-gd \
-        php-mbstring \
-        php-opcache \
-        php-pecl-apcu \
-        php-pecl-pcov \
-        php-pgsql \
-        php-xml \
-        tar \
-        unzip \
-        util-linux-user \
-    && \
-    yum update -y && \
-    rpm -ivh --nodeps https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm && \
-    sed -i "s/\$releasever/7/g" /etc/yum.repos.d/pgdg-redhat-all.repo && \
-    yum install -y postgresql14 && \
-    yum clean all && \
-    rm -rf /var/cache/yum && \
-    npm i -g npm && \
-    rm -rf /root/.npm /root/.config && \
-    rm -rf /var/www/* && \
-    chmod g+s /usr/share/httpd /var/www && \
-    curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o /etc/bash_completion.d/git-completion.bash && \
-    echo 'source /etc/bash_completion.d/git-completion.bash' > /usr/share/httpd/.bashrc && \
-    chown -R apache:apache /usr/share/httpd /var/www && \
-    chsh -s /usr/bin/bash apache
+RUN apt-get update \
+ && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+ && curl -fsSL https://salsa.debian.org/postgresql/postgresql-common/raw/master/pgdg/apt.postgresql.org.sh | PGVERSION=15 bash - \
+ && apt-get install -y --no-install-recommends \
+    bash-completion \
+    git \
+    jq \
+    libbz2-dev \
+    libfreetype6 \
+    libfreetype6-dev \
+    libjpeg62-turbo \
+    libjpeg62-turbo-dev \
+    libmagickcore-6.q16-6 \
+    libmagickcore-6.q16-dev \
+    libmagickwand-6.q16-6 \
+    libmagickwand-6.q16-dev \
+    libpng-dev \
+    libpng-tools \
+    libpng16-16 \
+    libpq-dev \
+    libssl-dev \
+    libxslt1-dev \
+    libxslt1.1 \
+    libzip-dev \
+    libzip4 \
+    netcat \
+    nodejs \
+    postgresql-client-15 \
+    ssh \
+    tree \
+    unzip \
+    vim \
+ && docker-php-ext-configure gd --with-freetype --with-jpeg \
+ && docker-php-ext-install -j$(nproc) \
+    bcmath \
+    bz2 \
+    calendar \
+    exif \
+    gd \
+    gettext \
+    intl \
+    opcache \
+    pcntl \
+    pdo_pgsql \
+    pgsql \
+    sockets \
+    xsl \
+    zip \
+ && pecl install apcu \
+ && pecl install imagick \
+ && pecl install pcov \
+ && pecl clear-cache \
+ && docker-php-ext-enable apcu imagick pcov \
+ && apt-get purge -y \
+    libbz2-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libmagickcore-6.q16-dev \
+    libmagickwand-6.q16-dev \
+    libpng-dev \
+    libpq-dev \
+    libssl-dev \
+    libxslt1-dev \
+    libzip-dev \
+ && apt-get -y autoremove \
+ && apt-get clean \
+ && curl -fsSL https://getcomposer.org/download/latest-2.x/composer.phar -o /usr/local/bin/composer \
+ && chmod +x /usr/local/bin/composer \
+ && curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o /etc/bash_completion.d/git-completion.bash -s \
+ && echo . /etc/bash_completion >> /etc/bash.bashrc \
+ && rm -rf /var/www/* \
+ && chmod g+s /var/www \
+ && chown -R www-data:www-data /var/www \
+ && chsh -s /bin/bash www-data \
+ && mkdir /home/www-data \
+ && usermod -d /home/www-data www-data \
+ && cp -r /etc/skel/. /home/www-data \
+ && chown -R www-data:www-data /home/www-data
 
 ENV PATH $PATH:vendor/bin:node_modules/.bin
-COPY ssh_config /etc/ssh/ssh_config
-
-CMD ["/usr/sbin/httpd", "-T", "-D", "FOREGROUND"]
+WORKDIR  /var/www
+USER www-data
+ENTRYPOINT []
+CMD ["/usr/sbin/apache2", "-T", "-D", "FOREGROUND"]
