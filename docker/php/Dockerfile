@@ -46,7 +46,6 @@ RUN apt-get update \
     pcntl \
     pdo_mysql \
     pdo_pgsql \
-    pgsql \
     sockets \
     xsl \
     zip \
