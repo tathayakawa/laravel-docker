@@ -1,7 +1,7 @@
 version: "3"
 services:
   php:
-    user: apache
+    user: www-data
     build:
       context: ./docker/php
     depends_on:
@@ -12,8 +12,8 @@ services:
       - ${PORT_BROWSERSYNC:-3000}:${PORT_BROWSERSYNC:-3000}
     volumes:
       - php:/var/www
-      - ./docker/php/php.ini:/etc/php.ini
-      - ./docker/php/httpd.conf:/etc/httpd/conf/httpd.conf
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/php/httpd.conf:/etc/apache2/apache2.conf
     working_dir: /var/www
     environment:
       APP_DEBUG: ${APP_DEBUG:-true}
