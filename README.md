@@ -19,6 +19,7 @@
 > *container $* npm install  
 > *container $* composer install  
 > *container $* ./artisan migrate:fresh --seed  
+> *container $* npm run build  
 
 
 ## ER図の出力
