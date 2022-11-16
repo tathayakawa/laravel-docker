@@ -1,8 +1,10 @@
 FROM php:8.1-apache-bullseye
 
 RUN apt-get update \
+ && apt-get install -y --no-install-recommends gnupg \
+ && curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgres-archive-keyring.gpg \
+ && echo "deb [signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/" bullseye-pgdg main > /etc/apt/sources.list.d/postgres.list \
  && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
- && curl -fsSL https://salsa.debian.org/postgresql/postgresql-common/raw/master/pgdg/apt.postgresql.org.sh | PGVERSION=15 bash - \
  && apt-get install -y --no-install-recommends \
     bash-completion \
     default-mysql-client \
