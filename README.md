@@ -16,8 +16,8 @@
 
 > \# *URL* には対象プロジェクトのリポジトリURLを指定  
 > *container $* git clone *URL* **./**  
-> *container $* npm install  
 > *container $* composer install  
+> *container $* npm install  
 > *container $* ./artisan migrate:fresh --seed  
 > *container $* npm run build  
 
