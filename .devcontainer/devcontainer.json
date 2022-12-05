@@ -6,6 +6,7 @@
     ],
 
     "service": "php",
+    "updateRemoteUserUID": false,
 
     "workspaceFolder": "/var/www",
 
