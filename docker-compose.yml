@@ -16,6 +16,7 @@ services:
       - ./docker/php/httpd.conf:/etc/apache2/apache2.conf
     working_dir: /var/www
     environment:
+      PHP_CS_FIXER_IGNORE_ENV=1: 1 # TODO php-cs-fixerがphp-8.2に対応したら削除
       APP_DEBUG: ${APP_DEBUG:-true}
       APP_KEY: _DUMMYDUMMYDUMMYDUMMYDUMMYDUMMY_
       APP_ENV: local
