@@ -59,6 +59,7 @@
         "eamodio.gitlens",
         "esbenp.prettier-vscode",
         "junstyle.php-cs-fixer",
+        "mhutchie.git-graph",
         "onecentlin.laravel-blade",
         "ryannaddy.laravel-artisan",
         "shufo.vscode-blade-formatter",
