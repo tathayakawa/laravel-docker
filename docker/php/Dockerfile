@@ -1,10 +1,12 @@
-FROM php:8.2-apache-bullseye
+FROM php:8.3-apache-bullseye
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends gnupg \
  && curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgres-archive-keyring.gpg \
  && echo "deb [signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/" bullseye-pgdg main > /etc/apt/sources.list.d/postgres.list \
- && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+ && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /usr/share/keyrings/nodesource.gpg \
+ && echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+ && apt-get update \
  && apt-get install -y --no-install-recommends \
     bash-completion \
     default-mysql-client \
@@ -30,7 +32,7 @@ RUN apt-get update \
     libzip4 \
     netcat \
     nodejs \
-    postgresql-client-15 \
+    postgresql-client-16 \
     ssh \
     tree \
     unzip \
