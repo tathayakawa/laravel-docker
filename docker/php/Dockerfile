@@ -54,10 +54,9 @@ RUN apt-get update \
     xsl \
     zip \
  && pecl install apcu \
- && pecl install imagick \
  && pecl install pcov \
  && pecl clear-cache \
- && docker-php-ext-enable apcu imagick pcov \
+ && docker-php-ext-enable apcu pcov \
  && apt-get purge -y \
     libbz2-dev \
     libfreetype6-dev \
