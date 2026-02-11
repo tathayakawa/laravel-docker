@@ -87,7 +87,8 @@ RUN apt-get update \
  && mkdir /home/www-data \
  && usermod -d /home/www-data www-data \
  && cp -r /etc/skel/. /home/www-data \
- && chown -R www-data:www-data /home/www-data
+ && chown -R www-data:www-data /home/www-data \
+ && su -s /bin/bash www-data -c "curl -fsSL https://claude.ai/install.sh | bash"
 
 COPY ssh-config /etc/ssh/ssh_config.d/default.conf
 RUN chmod 644 /etc/ssh/ssh_config.d/default.conf
