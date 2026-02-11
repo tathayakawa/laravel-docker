@@ -93,7 +93,7 @@ COPY ssh-config /etc/ssh/ssh_config.d/default.conf
 RUN chmod 644 /etc/ssh/ssh_config.d/default.conf
 RUN rm -rf /var/www/*
 
-ENV PATH $PATH:vendor/bin:node_modules/.bin
+ENV PATH=$PATH:vendor/bin:node_modules/.bin
 WORKDIR  /var/www
 USER www-data
 ENTRYPOINT []
