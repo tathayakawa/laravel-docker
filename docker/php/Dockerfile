@@ -1,4 +1,4 @@
-FROM php:8.4-apache-bookworm
+FROM php:8.5-apache-bookworm
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends gnupg \
@@ -50,7 +50,6 @@ RUN apt-get update \
     gd \
     gettext \
     intl \
-    opcache \
     pcntl \
     pdo_mysql \
     pdo_pgsql \
