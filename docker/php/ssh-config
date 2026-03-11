@@ -1,0 +1,7 @@
+Host *
+    Compression yes
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    LogLevel ERROR
+    CheckHostIP no
+    PasswordAuthentication no

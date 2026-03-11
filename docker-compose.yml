@@ -1,4 +1,3 @@
-version: "3"
 services:
   php:
     user: www-data
@@ -16,11 +15,13 @@ services:
       - ./docker/php/httpd.conf:/etc/apache2/apache2.conf
     working_dir: /var/www
     environment:
-      PHP_CS_FIXER_IGNORE_ENV=1: 1 # TODO php-cs-fixerがphp-8.2に対応したら削除
       APP_DEBUG: ${APP_DEBUG:-true}
       APP_KEY: _DUMMYDUMMYDUMMYDUMMYDUMMYDUMMY_
       APP_ENV: local
       APP_URL: http://localhost:8000
+      APP_TIMEZONE: Asia/Tokyo
+      APP_LOCALE: ja
+      APP_FAKER_LOCALE: ja_JP
       DB_CONNECTION: pgsql
       DB_HOST: database
       DB_PORT: 5432
@@ -28,14 +29,15 @@ services:
       DB_USERNAME: postgres
       PGHOST: database
       PGUSER: postgres
-      CACHE_DRIVER: apc
-      SESSION_DRIVER: apc
       TZ: Asia/Tokyo
+      MAIL_MAILER: smtp
       MAIL_HOST: mail
       MAIL_PORT: 1025
-      MAIL_ENCRYPTION: "null"
+      QUEUE_CONNECTION: sync
+      DEBUGBAR_OPEN_STORAGE: true
       LANG: C.UTF-8
       LANGUAGE: en_US
+      PHP_CS_FIXER_IGNORE_ENV: 1 # TODO php-cs-fixerがphp-8.4に対応した時点で削除
 
   database:
     image: postgres:bullseye

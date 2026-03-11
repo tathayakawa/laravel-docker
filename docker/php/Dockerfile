@@ -1,17 +1,21 @@
-FROM php:8.3-apache-bullseye
+FROM php:8.5-apache-bookworm
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends gnupg \
  && curl -sSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgres-archive-keyring.gpg \
- && echo "deb [signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/" bullseye-pgdg main > /etc/apt/sources.list.d/postgres.list \
+ && echo "deb [signed-by=/usr/share/keyrings/postgres-archive-keyring.gpg] https://apt.postgresql.org/pub/repos/apt/" bookworm-pgdg main > /etc/apt/sources.list.d/postgres.list \
  && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /usr/share/keyrings/nodesource.gpg \
- && echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+ && echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
+ && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg > /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+ && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list \
  && apt-get update \
  && apt-get install -y --no-install-recommends \
     bash-completion \
     default-mysql-client \
     git \
+    gh \
     jq \
+    less \
     libbz2-dev \
     libfreetype6 \
     libfreetype6-dev \
@@ -30,9 +34,9 @@ RUN apt-get update \
     libxslt1.1 \
     libzip-dev \
     libzip4 \
-    netcat \
+    netcat-openbsd \
     nodejs \
-    postgresql-client-16 \
+    postgresql-client-18 \
     ssh \
     tree \
     unzip \
@@ -46,7 +50,6 @@ RUN apt-get update \
     gd \
     gettext \
     intl \
-    opcache \
     pcntl \
     pdo_mysql \
     pdo_pgsql \
@@ -54,9 +57,10 @@ RUN apt-get update \
     xsl \
     zip \
  && pecl install apcu \
- && pecl install pcov \
+ && pecl install imagick \
+ && pecl install xdebug \
  && pecl clear-cache \
- && docker-php-ext-enable apcu pcov \
+ && docker-php-ext-enable apcu imagick xdebug \
  && apt-get purge -y \
     libbz2-dev \
     libfreetype6-dev \
@@ -74,16 +78,20 @@ RUN apt-get update \
  && chmod +x /usr/local/bin/composer \
  && curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o /etc/bash_completion.d/git-completion.bash -s \
  && echo . /etc/bash_completion >> /etc/bash.bashrc \
- && rm -rf /var/www/* \
  && chmod g+s /var/www \
  && chown -R www-data:www-data /var/www \
  && chsh -s /bin/bash www-data \
  && mkdir /home/www-data \
  && usermod -d /home/www-data www-data \
  && cp -r /etc/skel/. /home/www-data \
- && chown -R www-data:www-data /home/www-data
+ && chown -R www-data:www-data /home/www-data \
+ && su -s /bin/bash www-data -c "curl -fsSL https://claude.ai/install.sh | bash"
 
-ENV PATH $PATH:vendor/bin:node_modules/.bin
+COPY ssh-config /etc/ssh/ssh_config.d/default.conf
+RUN chmod 644 /etc/ssh/ssh_config.d/default.conf
+RUN rm -rf /var/www/*
+
+ENV PATH=$PATH:vendor/bin:node_modules/.bin
 WORKDIR  /var/www
 USER www-data
 ENTRYPOINT []
